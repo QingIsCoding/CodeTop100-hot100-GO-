@@ -1,0 +1,49 @@
+func minWindow(s string, t string) string {
+	//ans[0]:结果在t下的左下标,ans[1]:结果在t下的右下标
+	ans := []int{0, math.MaxInt}
+	//need:字符串某个元素被包含还需要的个数
+	need := make(map[byte]int)
+	for i := range t {
+		need[t[i]]++
+	}
+	//needCnt:字符串全部元素被包含还需要的个数
+	needCnt := len(t)
+	left := 0
+	for right := 0; right < len(s); right++ {
+        //并不是s中的每个字母都需要
+        //每次对need中的值进行增减的时候都要先判断在不在里面
+		if value, ok := need[s[right]]; ok {
+            if value > 0 {
+                needCnt--
+            }
+			need[s[right]]--
+		}
+		if needCnt == 0 {
+			for {
+				//[left,right]左侧元素ch(s[left])可能不是所需元素
+				//left直接右移到第一个所需元素
+				if value, ok := need[s[left]]; ok {
+                    //left不能再右移了(没有这个value就会刚好差一个)
+                    if value == 0 {
+                        break
+                    }
+					need[s[left]]++
+				}
+				left++
+			}
+			if right-left < ans[1]-ans[0] {
+				ans = []int{left, right}
+			}
+			if _, ok := need[s[left]]; ok {
+				need[s[left]]++
+			}
+			needCnt++
+			left++
+		}
+	}
+	if ans[1] > len(s) {
+		return ""
+	} else {
+		return s[ans[0] : ans[1]+1]
+	}
+}

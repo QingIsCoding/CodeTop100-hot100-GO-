@@ -1,0 +1,23 @@
+func generateParenthesis(n int) []string {
+    var ans []string
+    var dfs func(path string, left, right int)
+    dfs = func(path string, left, right int) {
+        //left:已使用的左括号数
+        //right:已使用的右括号数
+        if left == n && right == n {
+            ans = append(ans, path)
+            return
+        }
+        if left < right {
+            return
+        }
+        if left < n {
+            dfs(path + "(", left + 1, right)
+        }
+        if right < n {
+            dfs(path + ")", left, right + 1)
+        }
+    }
+    dfs("", 0, 0)
+    return ans
+}

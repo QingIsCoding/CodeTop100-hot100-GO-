@@ -1,0 +1,44 @@
+func myAtoi(s string) int {
+    var ans int
+    first := "start"
+    //1:正号 -1:负号
+    flag := 1
+    //[first][second]
+    table := map[string][]string{
+        //          ' '    '+'/'-'  '0'~'9'   else
+        "start": {"start", "sign", "number", "end"},
+        "sign": {"end", "end", "number", "end"},
+        "number": {"end", "end", "number", "end"},
+        "end": {"end", "end", "end", "end"},
+    }
+    var getSecond func(a byte) int
+    getSecond = func(a byte) int {
+        if a == ' ' {
+            return 0
+        } else if a == '+' || a == '-' {
+            return 1
+        } else if a >= '0' && a <= '9' {
+            return 2
+        } else {
+            return 3
+        }
+    }
+    for i := 0; i < len(s); i++ {
+        ch := s[i]
+        first = table[first][getSecond(ch)]
+        if first == "number" {
+            ans = ans * 10 + int(ch - '0')
+        } else if first == "sign" && ch == '+' {
+            flag = 1
+        } else if first == "sign" && ch == '-' {
+            flag = -1
+        }
+        if flag == 1 && ans > math.MaxInt32 {
+            return math.MaxInt32
+        }
+        if flag == -1 && -ans < math.MinInt32 {
+            return math.MinInt32
+        }
+    }
+    return flag * ans
+}

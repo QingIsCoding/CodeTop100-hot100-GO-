@@ -1,0 +1,32 @@
+func firstMissingPositive(nums []int) int {
+    //直接用该数组nums当哈希表用
+    //由于结果在[1,length+1]中
+    //1.[-∞,0]中的数i变成length+1:小于等于0的数和结果无关，不需要特殊记录
+    //但为了防止与下面2.中用负号来代表存在该数 防止歧义(length+1代替不影响结果就好)
+    //2.[1,length]中的数i让数组第i个位置的数(nums[i-1])变成第i个位置的数的相反数(-nums[i-1]):代表有这个数，用负号标记
+    //3.[length+1,+∞]中的数i和结果无关，不需要管
+    length := len(nums)
+    abs := func(a int) int {
+        if a >= 0 {
+            return a
+        } else {
+            return -a
+        }
+    }
+    for i := 0; i < length; i++ {
+        if nums[i] <= 0 {
+            nums[i] = length + 1
+        }
+    }
+    for i := 0; i < length; i++ {
+        if abs(nums[i]) <= length {
+            nums[abs(nums[i])-1] = -abs(nums[abs(nums[i])-1])
+        }
+    }
+    for i := 0; i < length; i++ {
+        if nums[i] > 0 {
+            return i + 1
+        }
+    }
+    return length + 1
+}

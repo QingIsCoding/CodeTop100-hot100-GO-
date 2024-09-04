@@ -1,0 +1,14 @@
+func longestCommonPrefix(strs []string) string {
+    for j := 0; j < len(strs[0]); j++ {
+        for i := 1; i < len(strs); i++ {
+            //到达当前判断的字符串末尾 或 与第一个字符串的同位置字符不匹配 时返回
+            //否则strs[i][j] = strs[i][strs[i]] 越界×
+            if len(strs[i]) == j || strs[i][j] != strs[0][j] {
+                return strs[0][:j]
+            }
+        }
+    }
+    //strs = ["a"]
+    //预期结果 "a"
+    return strs[0]
+}

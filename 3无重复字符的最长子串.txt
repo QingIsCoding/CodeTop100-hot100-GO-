@@ -1,0 +1,16 @@
+func lengthOfLongestSubstring(s string) int {
+    left, right, ans := 0, 0, 0
+    chMap := make(map[byte]int)
+    for right < len(s) {
+        add := s[right]
+        chMap[add]++
+        right++
+        for chMap[add] > 1 {
+            del := s[left]
+            chMap[del]--
+            left++
+        }
+        ans = max(ans, right - left)
+    }
+    return ans
+}

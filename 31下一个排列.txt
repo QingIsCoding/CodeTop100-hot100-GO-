@@ -1,0 +1,32 @@
+func nextPermutation(nums []int)  {
+    //1 3 5 7 9 8 6 4 2
+    //              i j
+    i, j, k := len(nums) - 2, len(nums) - 1, len(nums) - 1
+    //尽量操作右边的数，使得增加幅度比较小
+    //从右向左找到第一个可以增长的位置
+    //2,42,642,8642,98642怎么变都不可以增长了
+    //798642的7右可以增长
+    //ij   k
+    for i >= 0 && nums[i] >= nums[j] {
+        i--
+        j--
+    }
+    if i >= 0 {
+        //在尽可能靠右的低位(比j9小，但又比i7大)进行交换
+        //798642
+        //ijk
+        for nums[i] >= nums[k] {
+            k--
+        }
+        //897642
+        //ijk
+        nums[i], nums[k] = nums[k], nums[i]
+    }
+    //i大于右边除j外所有数，i<j，j大于右边所有数
+    //从j到结尾都是递减的
+    //再让j到结尾逆序，变得尽量小
+    //897642->824679
+    for a, b := j, len(nums) - 1; a < b; a, b = a + 1, b - 1 {
+        nums[a], nums[b] = nums[b], nums[a]
+    }
+}

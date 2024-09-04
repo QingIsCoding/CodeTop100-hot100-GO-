@@ -1,0 +1,21 @@
+func sortColors(nums []int)  {
+    //0~left-1 left~mid-1 mid...right right+1~len(nums)-1
+    //00000000 111111111              2222222222222222222
+    left, mid, right := 0, 0, len(nums) - 1
+    for mid <= right {
+        if nums[mid] == 0 {
+            //mid给left，能确定left
+            //left给mid，不能确定mid，继续判断mid
+            nums[left], nums[mid] = nums[mid], nums[left]
+            left++
+            mid++
+        } else if nums[mid] == 2 {
+            //mid给right，能确定right
+            //right给mid，不能确定mid
+            nums[mid], nums[right] = nums[right], nums[mid]
+            right--
+        } else {
+            mid++
+        }
+    }
+}

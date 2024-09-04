@@ -1,0 +1,38 @@
+func search(nums []int, target int) int {
+    left, right := 0, len(nums) - 1
+    //找左区间的右端点（划分为左右两个区间）
+    for left < right {
+        mid := (left + right + 1) / 2
+        if nums[mid] >= nums[0] {
+            left = mid
+        } else {
+            right = mid - 1
+        }
+    }
+    //target在左区间
+    if target >= nums[0] {
+        left = 0
+    //target在右区间
+    } else {
+        left = right + 1
+        right = len(nums) - 1
+    }
+    for left < right {
+        mid := (left + right) / 2
+        if nums[mid] >= target {
+            right = mid
+        } else {
+            left = mid + 1
+        }
+    }
+    //if nums[left] == target { ×
+    //nums = [1], target = 0
+    //if target >= nums[0] { 判断失败，进入
+    //left = right + 1 = 1，right = len(nums) - 1 = 0
+    //正常情况下整数二分后，left = right，但这里在开始二分前就越界了
+    if nums[right] == target {
+        return right
+    } else {
+        return -1
+    }
+}

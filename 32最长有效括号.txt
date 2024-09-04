@@ -1,0 +1,23 @@
+func longestValidParentheses(s string) int {
+    //栈底stack[0]最后一个没有被匹配的右括号的下标
+    //除了栈底，栈的其它元素都是待匹配的左括号
+    ans := 0
+    //在s前面假装加一个右括号
+    stack := []int{-1}
+    for i := 0; i < len(s); i++ {
+        if s[i] == '(' {
+            stack = append(stack, i)
+        //遇到右括号时
+        //1.匹配掉栈顶的左括号
+        //2.成为栈底的新的唯一右括号
+        } else {
+            stack = stack[:len(stack)-1]
+            if len(stack) == 0 {
+                stack = append(stack, i)
+            } else {
+                ans = max(ans, i - stack[len(stack)-1])
+            }
+        }
+    }
+    return ans
+}

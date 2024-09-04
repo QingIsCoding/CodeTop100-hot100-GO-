@@ -1,0 +1,24 @@
+func combinationSum(candidates []int, target int) [][]int {
+    var ans [][]int
+    var path []int
+    var backtracking func(startIndex, curSum int)
+    backtracking = func(startIndex, curSum int) {
+        if curSum > target {
+            return
+        }
+        if curSum == target {
+            temp := append([]int{}, path...)
+            ans = append(ans, temp)
+            return
+        }
+        for i := startIndex; i < len(candidates); i++ {
+            curSum += candidates[i]
+            path = append(path, candidates[i])
+            backtracking(i, curSum)
+            path = path[:len(path)-1]
+            curSum -= candidates[i]
+        }
+    }
+    backtracking(0, 0)
+    return ans
+}

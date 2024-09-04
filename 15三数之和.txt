@@ -1,0 +1,33 @@
+func threeSum(nums []int) [][]int {
+    sort.Ints(nums)
+    ans := make([][]int, 0)
+    for i := 0; i < len(nums); i++ {
+        if nums[i] > 0 {
+            return ans
+        }
+        //开始一轮判断时:和已判断的比较，是否相同(可以跳过)
+        if i > 0 && nums[i] == nums[i-1] {
+            continue
+        }
+        j, k := i + 1, len(nums) - 1
+        for j < k {
+            if nums[i] + nums[j] + nums[k] < 0 {
+                j++
+            } else if nums[i] + nums[j] + nums[k] > 0 {
+                k--
+            } else {
+                ans = append(ans, []int{nums[i], nums[j], nums[k]})
+                //结束一轮判断时:和未判断的比较，是否相同(可以跳过)
+                for j < k && nums[j] == nums[j+1] {
+                    j++
+                }
+                for j < k && nums[k] == nums[k-1] {
+                    k--
+                }
+                j++
+                k--
+            }
+        }
+    }
+    return ans
+}
