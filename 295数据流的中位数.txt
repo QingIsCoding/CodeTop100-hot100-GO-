@@ -1,0 +1,85 @@
+type MaxHeap []int
+func(maxh MaxHeap) Len() int {
+    return len(maxh)
+}
+func(maxh MaxHeap) Less(i, j int) bool {
+    return maxh[i] > maxh[j]
+}
+func(maxh MaxHeap) Swap(i, j int) {
+    maxh[i], maxh[j] = maxh[j], maxh[i]
+}
+//a.元素被添加到切片的末尾，底层会调整该元素到正确的位置
+func(maxh *MaxHeap) Push(x any) {
+    //在container/heap包中，Push和Pop要求往切片末尾操作，O(1)
+    //向切片开头插入元素则涉及到移动切片中所有现有元素来为新元素腾出空间，O(n)
+    //堆顶元素实际上是切片中的第一个元素
+    *maxh = append(*maxh, x.(int))
+}
+//b.堆顶元素(切片的第一个元素)被移动到切片末尾，底层会调整新的堆顶元素到正确的位置
+func(maxh *MaxHeap) Pop() any {
+    maximum := (*maxh)[len(*maxh)-1]
+    *maxh = (*maxh)[:len(*maxh)-1]
+    return maximum
+}
+
+type MinHeap []int
+func(minh MinHeap) Len() int {
+    return len(minh)
+}
+func(minh MinHeap) Less(i, j int) bool {
+    return minh[i] < minh[j]
+}
+func(minh MinHeap) Swap(i, j int) {
+    minh[i], minh[j] = minh[j], minh[i]
+}
+func(minh *MinHeap) Push(x any) {
+    *minh = append(*minh, x.(int))
+}
+func(minh *MinHeap) Pop() any {
+    minimum := (*minh)[len(*minh)-1]
+    *minh = (*minh)[:len(*minh)-1]
+    return minimum
+}
+
+type MedianFinder struct {
+    maxh *MaxHeap
+    minh *MinHeap
+}
+
+
+func Constructor() MedianFinder {
+    return MedianFinder{&MaxHeap{}, &MinHeap{}}
+}
+
+//平衡:大根堆和小根堆元素个数不超过1
+func (this *MedianFinder) AddNum(num int)  {
+    //大根堆   ->   小根堆
+    //a<...<b      <c<...<d (从左到右依次递增)
+    //b是大根堆的最大值，c是小根堆的最小值
+    //1.默认把元素给小根堆
+    if this.maxh.Len() == this.minh.Len() {
+        heap.Push(this.maxh, num)
+        heap.Push(this.minh, heap.Pop(this.maxh))
+    //2.小根堆比大根堆多1个，加入后小根堆比大根堆多2个，小根堆给1个大根堆来保持平衡
+    } else {
+        heap.Push(this.minh, num)
+        heap.Push(this.maxh, heap.Pop(this.minh))
+    }
+}
+
+
+func (this *MedianFinder) FindMedian() float64 {
+    if this.minh.Len() > this.maxh.Len() {
+        return float64((*this.minh)[0])
+    } else {
+        return float64((*this.minh)[0]+(*this.maxh)[0]) / 2
+    }
+}
+
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * obj := Constructor();
+ * obj.AddNum(num);
+ * param_2 := obj.FindMedian();
+ */

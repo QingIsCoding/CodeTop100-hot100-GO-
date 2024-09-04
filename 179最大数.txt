@@ -1,0 +1,19 @@
+func largestNumber(nums []int) string {
+    strs := make([]string, len(nums))
+    for i, num := range nums {
+        strs[i] = strconv.Itoa(num)
+    }
+    sort.Slice(strs, func(i, j int) bool {
+        return strs[i] + strs[j] > strs[j] + strs[i]
+    })
+    //strings.Join(s []string, sep string) 将字符串切片中存在的所有元素连接为单个字符串
+    //s是可用来连接元素的字符串
+    //sep是放置在最终字符串中元素之间的分隔符
+    ans := strings.Join(strs, "")
+    //结果有可能为全0，判断开头是否为0即可
+    if ans[0] == '0' {
+        return "0"
+    } else {
+        return ans
+    }
+}

@@ -1,0 +1,17 @@
+func findPeakElement(nums []int) int {
+    /*
+    https://www.acwing.com/video/1532/
+    只要数组中存在一个元素比右边相邻元素大，那么它作为边界一定可以找到一个峰值
+    可能会错过某些峰值，但是能保证还有这个峰值
+    */
+    left, right := 0, len(nums) - 1
+    for left < right {
+        mid := (left + right) / 2
+        if nums[mid] > nums[mid+1] {
+            right = mid
+        } else {
+            left = mid + 1
+        }
+    }
+    return left
+}

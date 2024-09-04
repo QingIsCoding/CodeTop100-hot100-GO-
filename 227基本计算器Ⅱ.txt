@@ -1,0 +1,56 @@
+//https://www.acwing.com/video/1596/
+//宫水三叶【宫水三叶】使用「双栈」解决「究极表达式计算」问题
+func calculate(s string) int {
+	var numStack []int
+	var opStack []byte
+	priority := map[byte]int{
+		'+': 1,
+		'-': 1,
+		'*': 2,
+		'/': 2,
+	}
+	eval := func() {
+		b := numStack[len(numStack)-1]
+		numStack = numStack[:len(numStack)-1]
+		a := numStack[len(numStack)-1]
+		numStack = numStack[:len(numStack)-1]
+		op := opStack[len(opStack)-1]
+		opStack = opStack[:len(opStack)-1]
+		if op == '+' {
+			numStack = append(numStack, a+b)
+		} else if op == '-' {
+			numStack = append(numStack, a-b)
+		} else if op == '*' {
+			numStack = append(numStack, a*b)
+		} else if op == '/' {
+			numStack = append(numStack, a/b)
+		}
+	}
+    for i := 0; i < len(s); i++ {
+        if s[i] == ' ' {
+            continue
+        } else if s[i] >= '0' && s[i] <= '9' {
+            num := 0
+            j := i
+            for j < len(s) && s[j] >= '0' && s[j] <= '9' {
+                num = 10 * num + int(s[j] - '0')
+                j++
+            }
+            numStack = append(numStack, num)
+            //s[i,j]是一整个数字,j++后，i先变成j-1，在for循环的i++再变成j
+            //也就是i++后，i指向整个数字的后面一个字符
+            i = j - 1
+        } else {
+            //在运算符放入之前先把栈内可以算的都算掉
+            //只有栈内运算符比当前运算符优先级高/同等，才进行运算
+            for len(opStack) != 0 && priority[opStack[len(opStack)-1]] >= priority[s[i]] {
+                eval()
+            }
+            opStack = append(opStack, s[i])
+        }
+    }
+    for len(opStack) != 0 {
+        eval()
+    }
+    return numStack[0]
+}

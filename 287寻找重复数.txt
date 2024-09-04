@@ -1,0 +1,24 @@
+func findDuplicate(nums []int) int {
+    //n+1个数在1~n范围(最多n个数)
+    //=>至少存在1个数i出现2次
+    //=>这个数i作为下标对应的数nums[i]出现2次
+    //=>nums[i]入度至少为2
+    //=>第一次从一个数到达nums[i]，第二次从另一个数到达nums[i]
+    //=>存在nums[i]作为入口的环
+    slow, fast := nums[0], nums[nums[0]]
+    for slow != fast {
+        slow = nums[slow]
+        fast = nums[nums[fast]]
+        if slow == fast {
+            x, y := 0, slow
+            for x != y {
+                x = nums[x]
+                y = nums[y]
+            }
+            return x
+        }
+    }
+    //可能一开始slow=fast，跳过for判断
+    //直接找到环的入口
+    return slow
+}

@@ -1,0 +1,25 @@
+func decodeString(s string) string {
+    //Krahets字符串解码（辅助栈法 / 递归法，清晰图解）
+    ans := ""
+    num := 0
+    stack := make([]string, 0)
+    for _, ch := range s {
+        if ch >= '0' && ch <= '9' {
+            num = 10 * num + int(ch-'0')
+        } else if ch == '[' {
+            stack = append(stack, strconv.Itoa(num))
+            num = 0
+            stack = append(stack, ans)
+            ans = ""
+        } else if ch == ']' {
+            preAns := stack[len(stack)-1]
+            stack = stack[:len(stack)-1]
+            preNum, _ := strconv.Atoi(stack[len(stack)-1])
+            stack = stack[:len(stack)-1]
+            ans = preAns + strings.Repeat(ans, preNum)
+        } else {
+            ans += string(ch)
+        }
+    }
+    return ans
+}

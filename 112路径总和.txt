@@ -1,0 +1,26 @@
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func hasPathSum(root *TreeNode, targetSum int) bool {
+    var dfs func(cur *TreeNode, curSum int) bool
+    dfs = func(cur *TreeNode, curSum int) bool {
+        if cur == nil {
+            return false
+        }
+        curSum += cur.Val
+        if cur.Left == nil && cur.Right == nil {
+            if curSum == targetSum {
+                return true
+            } else {
+                return false
+            }
+        }
+        return dfs(cur.Left, curSum) || dfs(cur.Right, curSum)
+    }
+    return dfs(root, 0)
+}

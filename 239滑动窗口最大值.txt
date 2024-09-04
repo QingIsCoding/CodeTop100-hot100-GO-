@@ -1,0 +1,29 @@
+func maxSlidingWindow(nums []int, k int) []int {
+    ans := make([]int, 0)
+    //单调非递增队列
+    queue := make([]int, 0)
+    push := func(value int) {
+        for len(queue) > 0 && value > queue[len(queue)-1] {
+            queue = queue[:len(queue)-1]
+        }
+        queue = append(queue, value)
+    }
+    pop := func(value int) {
+        if value == queue[0] {
+            queue = queue[1:]
+        }
+    }
+    getMaxValue := func() int {
+        return queue[0]
+    }
+    for i := 0; i < k; i++ {
+        push(nums[i])
+    }
+    ans = append(ans, getMaxValue())
+    for i := k; i < len(nums); i++ {
+        pop(nums[i-k])
+        push(nums[i])
+        ans = append(ans, getMaxValue())
+    }
+    return ans
+}

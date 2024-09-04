@@ -1,0 +1,15 @@
+func findMin(nums []int) int {
+    left, right := 0, len(nums) - 1
+    for left < right {
+        mid := (left + right) / 2
+        //找右区间的左端点，右区间第一个数肯定小于右区间最后一个数
+        //判断nums[mid]<nums[right]?即可
+        //mid不可能等于right，除非left=right(mid=(left+right)/2)
+        if nums[mid] < nums[right] {
+            right = mid
+        } else {
+            left = mid + 1
+        }
+    }
+    return nums[left]
+}

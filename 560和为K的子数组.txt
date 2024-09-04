@@ -1,0 +1,17 @@
+func subarraySum(nums []int, k int) int {
+    var ans, prefixSum int
+    prefixSumMap := map[int]int{0: 1}
+    for i := 0; i < len(nums); i++ {
+        //prefixSum = nums[0]+...+nums[i]
+        prefixSum += nums[i]
+        /*
+        prefixSumMap[prefixSum]++
+        ans += prefixSumMap[prefixSum-k]
+        不能调换顺序
+        k=0时会多加上初始状态的prefixSumMap[0]=1
+        */
+        ans += prefixSumMap[prefixSum-k]
+        prefixSumMap[prefixSum]++
+    }
+    return ans
+}

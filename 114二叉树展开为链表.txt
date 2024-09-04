@@ -1,0 +1,27 @@
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func flatten(root *TreeNode) {
+	//左节点不为空，把左节点放到根节点和右节点之间
+	//一直向右遍历，直到所有节点都没有左节点
+	cur := root
+	for cur != nil {
+		if cur.Left != nil {
+			left := cur.Left
+			//左节点的右节点的右节点...的右节点
+			leftRightMost := left
+			for leftRightMost.Right != nil {
+				leftRightMost = leftRightMost.Right
+			}
+			leftRightMost.Right = cur.Right
+			cur.Left = nil
+			cur.Right = left
+		}
+        cur = cur.Right
+	}
+}

@@ -1,0 +1,21 @@
+func longestConsecutive(nums []int) int {
+    //https://www.acwing.com/video/1492/
+    var ans int
+    numMap := make(map[int]bool)
+    for _, num := range nums {
+        numMap[num] = true
+    }
+    //只有当一个数是连续序列的第一个数的情况下才会进入内层循环
+    //然后在内层循环中匹配连续序列中的数
+    //因此数组中的每个数只会进入内层循环一次
+    for num := range numMap {
+        if numMap[num-1] == false {
+            x := num + 1
+            for numMap[x] == true {
+                x++
+            }
+            ans = max(ans, x - num)
+        }
+    }
+    return ans
+}

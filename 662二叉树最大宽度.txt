@@ -1,0 +1,32 @@
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+type NodeIndex struct {
+	node  *TreeNode
+	index int
+}
+
+func widthOfBinaryTree(root *TreeNode) int {
+	var ans int
+	queue := []NodeIndex{{root, 1}}
+	for len(queue) > 0 {
+        ans = max(ans, queue[len(queue)-1].index-queue[0].index+1)
+		curLayerLen := len(queue)
+		for i := 0; i < curLayerLen; i++ {
+			cur := queue[0]
+			queue = queue[1:]
+			if cur.node.Left != nil {
+				queue = append(queue, NodeIndex{cur.node.Left, cur.index * 2})
+			}
+			if cur.node.Right != nil {
+				queue = append(queue, NodeIndex{cur.node.Right, cur.index*2 + 1})
+			}
+		}
+	}
+	return ans
+}

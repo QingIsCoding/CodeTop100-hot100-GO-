@@ -1,0 +1,28 @@
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func kthSmallest(root *TreeNode, k int) int {
+    ans := 0
+    var preorder func(node *TreeNode) bool
+    preorder = func(node *TreeNode)  bool {
+        if node == nil {
+            return false
+        }
+        if preorder(node.Left) {
+            return true
+        }
+        if k == 1 {
+            ans = node.Val
+            return true
+        }
+        k--
+        return preorder(node.Right)
+    }
+    preorder(root)
+    return ans
+}

@@ -1,0 +1,73 @@
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func sortList(head *ListNode) *ListNode {
+    var mergeTwoLists func(head1, head2 *ListNode) *ListNode
+    mergeTwoLists = func(head1, head2 *ListNode) *ListNode {
+        dummyHead := &ListNode{}
+        cur := dummyHead
+        for head1 != nil && head2 != nil {
+            if head1.Val < head2.Val {
+                cur.Next = head1
+                cur = cur.Next
+                head1 = head1.Next
+            } else {
+                cur.Next = head2
+                cur = cur.Next
+                head2 = head2.Next
+            }
+        }
+        for head1 != nil {
+            cur.Next = head1
+            cur = cur.Next
+            head1 = head1.Next
+        }
+        for head2 != nil {
+            cur.Next = head2
+            cur = cur.Next
+            head2 = head2.Next
+        }
+        return dummyHead.Next
+    }
+    var length int
+    for node := head; node != nil; node = node.Next {
+        length++
+    }
+    dummyHead := &ListNode{Next: head}
+    for subLength := 1; subLength < length; subLength *= 2 {
+        pre, cur := dummyHead, dummyHead.Next
+        for cur != nil {
+            head1 := cur
+            for i := 1; i < subLength && cur.Next != nil; i++ {
+                cur = cur.Next
+            }
+            //可能是由于i == subLength退出for循环，而cur.Next == nil
+            //即head1刚好满足子节点长度时，head2没有节点了
+            //会出现后面注释中head2.Next = nil.Next访问空指针的情况
+            head2 := cur.Next
+            cur.Next = nil
+            cur = head2
+            //-1           5        3        4         0        nil
+            //head1               head2              head1     head2
+            //head2.Next = nil.Next ×
+            for i := 1; i < subLength && cur != nil && cur.Next != nil; i++ {
+                cur = cur.Next
+            }
+            var next *ListNode
+            if cur != nil {
+                next = cur.Next
+                cur.Next = nil
+            }
+            pre.Next = mergeTwoLists(head1, head2)
+            for pre.Next != nil {
+                pre = pre.Next
+            }
+            cur = next
+        }
+    }
+    return dummyHead.Next
+}

@@ -1,0 +1,31 @@
+/**
+ * Definition for a Node.
+ * type Node struct {
+ *     Val int
+ *     Next *Node
+ *     Random *Node
+ * }
+ */
+
+func copyRandomList(head *Node) *Node {
+    //复制每个节点的Val和Next，放在它后面
+    for cur := head; cur != nil; cur = cur.Next.Next {
+        cur.Next = &Node{Val: cur.Val, Next: cur.Next}
+    }
+    //复制每个节点的Random
+    for cur := head; cur != nil; cur = cur.Next.Next {
+        if cur.Random != nil {
+            cur.Next.Random = cur.Random.Next
+        }
+    }
+    //拆分两个链表
+    dummyHead := &Node{Next: head}
+    cur := dummyHead
+    for p := head; p != nil; p = p.Next {
+        q := p.Next
+        cur.Next = q
+        cur = cur.Next
+        p.Next = q.Next
+    }
+    return dummyHead.Next
+}

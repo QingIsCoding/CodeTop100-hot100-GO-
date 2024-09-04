@@ -1,0 +1,17 @@
+func majorityElement(nums []int) int {
+    //多数元素
+    var ans int
+    //多数元素比其它所有元素多的个数
+    var ansMoreOther int
+    for _, num := range nums {
+        if ansMoreOther == 0 {
+            ans = num
+            ansMoreOther = 1
+        } else if num == ans {
+            ansMoreOther++
+        } else {
+            ansMoreOther--
+        }
+    }
+    return ans
+}

@@ -1,0 +1,37 @@
+func reverseWords(s string) string {
+    removeExtraSpaces := func(arr []byte) []byte {
+        left := 0
+        for right := 0; right < len(arr); right++ {
+            if arr[right] != ' ' {
+                if left != 0 {
+                    arr[left] = ' '
+                    left++
+                }
+                for right < len(s) && arr[right] != ' ' {
+                    arr[left] = arr[right]
+                    left++
+                    right++
+                }
+            }
+        }
+        return arr[:left]
+    }
+    reverseWord := func(arr []byte) []byte {
+        for i, j := 0, len(arr) - 1; i < j; i, j = i + 1, j - 1 {
+            arr[i], arr[j] = arr[j], arr[i]
+        }
+        return arr
+    }
+    sArr := removeExtraSpaces([]byte(s))
+    reverseWord(sArr)
+    left := 0
+    for right := 0; right <= len(sArr); right++ {
+        //if sArr[right] == ' ' || right == len(sArr) ×
+        //更改顺序会导致判断sArr[right] = sArr[len(sArr)] 数组越界错误
+        if right == len(sArr) || sArr[right] == ' ' {
+            reverseWord(sArr[left:right])
+            left = right + 1
+        }
+    }
+    return string(sArr)
+}

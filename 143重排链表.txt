@@ -1,0 +1,46 @@
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func reorderList(head *ListNode)  {
+    var middleNode func(head *ListNode) *ListNode
+    var reverseList func(head *ListNode) *ListNode
+    var mergeTwoLists func(list1 *ListNode, list2 *ListNode)
+    middleNode = func(head *ListNode) *ListNode {
+        slow, fast := head, head
+        for fast.Next != nil && fast.Next.Next != nil {
+            slow = slow.Next
+            fast = fast.Next.Next
+        }
+        return slow
+    }
+    reverseList = func(head *ListNode) *ListNode {
+        var pre, cur, next *ListNode
+        cur = head
+        for cur != nil {
+            next = cur.Next
+            cur.Next = pre
+            pre = cur
+            cur = next
+        }
+        return pre
+    }
+    mergeTwoLists = func(list1 *ListNode, list2 *ListNode) {
+        var next1, next2 *ListNode
+        for list1 != nil && list2 != nil {
+            next1, next2 = list1.Next, list2.Next
+            list1.Next = list2
+            list1 = next1
+            list2.Next = list1
+            list2 = next2
+        }
+    }
+    mid := middleNode(head)
+    l1, l2 := head, mid.Next
+    mid.Next = nil
+    l2 = reverseList(l2)
+    mergeTwoLists(l1, l2)
+}

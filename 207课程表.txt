@@ -1,0 +1,30 @@
+func canFinish(numCourses int, prerequisites [][]int) bool {
+    indegrees := make([]int, numCourses)
+    adjacencyList := make([][]int, numCourses)
+    for i := 0; i < numCourses; i++ {
+        adjacencyList[i] = make([]int, 0)
+    }
+    queue := make([]int, 0)
+    for _, prerequisite := range prerequisites {
+        //学习课程prerequisite[0]必须先学习课程prerequisite[1]
+        indegrees[prerequisite[0]]++
+        adjacencyList[prerequisite[1]] = append(adjacencyList[prerequisite[1]], prerequisite[0])
+    }
+    for i := 0; i < numCourses; i++ {
+        if indegrees[i] == 0 {
+            queue = append(queue, i)
+        }
+    }
+    for len(queue) > 0 {
+        cur := queue[0]
+        queue = queue[1:]
+        numCourses--
+        for _, next := range adjacencyList[cur] {
+            indegrees[next]--
+            if indegrees[next] == 0 {
+                queue = append(queue, next)
+            }
+        }
+    }
+    return numCourses == 0
+}

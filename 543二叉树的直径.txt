@@ -1,0 +1,24 @@
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func diameterOfBinaryTree(root *TreeNode) int {
+    var ans int
+    var getHeight func(cur *TreeNode) int
+    getHeight = func(cur *TreeNode) int {
+        if cur == nil {
+            return 0
+        }
+        leftHeight, rightHeight := getHeight(cur.Left), getHeight(cur.Right)
+        //当前节点直径是左子树高度+右子树高度
+        ans = max(ans, leftHeight + rightHeight)
+        return max(leftHeight, rightHeight) + 1
+    }
+    //直径可能不经过根节点root，用ans记录并返回
+    getHeight(root)
+    return ans
+}

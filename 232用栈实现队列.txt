@@ -1,0 +1,49 @@
+type MyQueue struct {
+    inStk, outStk []int
+}
+
+
+func Constructor() MyQueue {
+    return MyQueue{}
+}
+
+
+func (this *MyQueue) Push(x int)  {
+    this.inStk = append(this.inStk, x)
+}
+
+
+func (this *MyQueue) Pop() int {
+    if len(this.outStk) == 0 {
+        this.outStk = this.inStk
+        this.inStk = make([]int, 0)
+    }
+    ans := this.outStk[0]
+    this.outStk = this.outStk[1:]
+    return ans
+}
+
+
+func (this *MyQueue) Peek() int {
+    if len(this.outStk) == 0 {
+        this.outStk = this.inStk
+        this.inStk = make([]int, 0)
+    }
+    ans := this.outStk[0]
+    return ans
+}
+
+
+func (this *MyQueue) Empty() bool {
+    return len(this.inStk) == 0 && len(this.outStk) == 0
+}
+
+
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * obj := Constructor();
+ * obj.Push(x);
+ * param_2 := obj.Pop();
+ * param_3 := obj.Peek();
+ * param_4 := obj.Empty();
+ */

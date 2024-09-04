@@ -1,0 +1,34 @@
+func maxAreaOfIsland(grid [][]int) int {
+	var ans, area int
+	row, column := len(grid), len(grid[0])
+	visited := make([][]bool, row)
+	for i := range visited {
+		visited[i] = make([]bool, column)
+	}
+	diretion := [][]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
+	var dfs func(x, y int)
+	dfs = func(x, y int) {
+		if x < 0 || x >= row || y < 0 || y >= column {
+			return
+		}
+		if grid[x][y] == 0 || visited[x][y] == true {
+			return
+		}
+		visited[x][y] = true
+		area++
+		for i := range diretion {
+			nextx, nexty := x+diretion[i][0], y+diretion[i][1]
+			dfs(nextx, nexty)
+		}
+	}
+	for i := 0; i < row; i++ {
+		for j := 0; j < column; j++ {
+			if grid[i][j] == 1 && visited[i][j] == false {
+				area = 0
+				dfs(i, j)
+				ans = max(ans, area)
+			}
+		}
+	}
+	return ans
+}
