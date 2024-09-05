@@ -1,0 +1,78 @@
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+//笨猪爆破组『手画图解』剖析DFS、BFS解法 | 二叉树的序列化与反序列化
+type Codec struct {
+    
+}
+
+func Constructor() Codec {
+    return Codec{}
+}
+
+// Serializes a tree to a single string.
+func (this *Codec) serialize(root *TreeNode) string {
+    ans := []string{}
+    queue := []*TreeNode{root}
+    for len(queue) > 0 {
+        cur := queue[0]
+        queue = queue[1:]
+        //有值就用值标记
+        //没值就用X标记
+        if cur != nil {
+            ans = append(ans, strconv.Itoa(cur.Val))
+            queue = append(queue, cur.Left)
+            queue = append(queue, cur.Right)
+        } else {
+            ans = append(ans, "X")
+        }
+    }
+    return strings.Join(ans, ",")
+}
+
+// Deserializes your encoded data to tree.
+func (this *Codec) deserialize(data string) *TreeNode {    
+    if data == "X" {
+        return nil
+    }
+    strArr := strings.Split(data, ",")
+    rootVal, _ := strconv.Atoi(strArr[0])
+    root := &TreeNode{Val: rootVal}
+    queue := []*TreeNode{root}
+    //root的index为0,root的左孩子index为1
+    index := 1
+    for index < len(strArr) {
+        cur := queue[0]
+        queue = queue[1:]
+        leftVal := strArr[index]
+        rightVal := strArr[index+1]
+        //左孩子或右孩子为空时,不用加入队列
+        //因为后面data的标记与它们无关了
+        if leftVal != "X" {
+            v, _ := strconv.Atoi(leftVal)
+			cur.Left = &TreeNode{Val: v}
+			queue = append(queue, cur.Left)
+        }
+        if rightVal != "X" {
+            v, _ := strconv.Atoi(rightVal)
+			cur.Right = &TreeNode{Val: v}
+			queue = append(queue, cur.Right)
+        }
+        index += 2
+    }
+    return root
+}
+
+
+/**
+ * Your Codec object will be instantiated and called as such:
+ * ser := Constructor();
+ * deser := Constructor();
+ * data := ser.serialize(root);
+ * ans := deser.deserialize(data);
+ */
